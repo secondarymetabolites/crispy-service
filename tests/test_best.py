@@ -111,7 +111,7 @@ def test_overlaps(rec, cdses, grnas):
     expected[3] = True
     expected[4] = True
 
-    ret = map(lambda x: BestEditWindow.overlaps(cds, x), grnas)
+    ret = list(map(lambda x: BestEditWindow.overlaps(cds, x), grnas))
     assert ret == expected
 
 
@@ -128,7 +128,7 @@ def test_get_affected_codons_fw_fw(rec, cdses, grnas):
     edit_window = BestEditWindow(rec, cdses[0], grnas[2])
     expected = ["M1M", "A2V", "R3*"]
 
-    ret = map(str, edit_window.get_affected_codons())
+    ret = list(map(str, edit_window.get_affected_codons()))
     assert ret == expected
 
 
@@ -137,7 +137,7 @@ def test_get_affected_codons_fw_rv(rec, cdses, grnas):
     edit_window = BestEditWindow(rec, cdses[0], grnas[3])
     expected = ["H10H", "A11T", "T12T"]
 
-    ret = map(str, edit_window.get_affected_codons())
+    ret = list(map(str, edit_window.get_affected_codons()))
     assert ret == expected
 
 
@@ -146,7 +146,7 @@ def test_get_affected_codons_rv_fw(rec, cdses, grnas):
     edit_window = BestEditWindow(rec, cdses[1], grnas[9])
     expected = ["L14L", "F15F", "*16*"]
 
-    ret = map(str, edit_window.get_affected_codons())
+    ret = list(map(str, edit_window.get_affected_codons()))
     assert ret == expected
 
 
@@ -155,7 +155,7 @@ def test_get_affected_codons_rv_rv(rec, cdses, grnas):
     edit_window = BestEditWindow(rec, cdses[1], grnas[10])
     expected = ["R3*", "R4C", "Y5Y"]
 
-    ret = map(str, edit_window.get_affected_codons())
+    ret = list(map(str, edit_window.get_affected_codons()))
     assert ret == expected
 
 
@@ -164,7 +164,7 @@ def test_mutations_codons_fw_fw(rec, cdses, grnas):
     edit_window = BestEditWindow(rec, cdses[0], grnas[2])
     expected = ["A2V", "R3*"]
 
-    ret = map(str, edit_window.get_mutations())
+    ret = list(map(str, edit_window.get_mutations()))
     assert ret == expected
 
 
@@ -173,7 +173,7 @@ def test_get_mutations_fw_rv(rec, cdses, grnas):
     edit_window = BestEditWindow(rec, cdses[0], grnas[3])
     expected = ["A11T"]
 
-    ret = map(str, edit_window.get_mutations())
+    ret = list(map(str, edit_window.get_mutations()))
     assert ret == expected
 
 
@@ -182,7 +182,7 @@ def test_get_mutations_rv_fw(rec, cdses, grnas):
     edit_window = BestEditWindow(rec, cdses[1], grnas[9])
     expected = []
 
-    ret = map(str, edit_window.get_mutations())
+    ret = list(map(str, edit_window.get_mutations()))
     assert ret == expected
 
 
@@ -191,7 +191,7 @@ def test_get_mutations_rv_rv(rec, cdses, grnas):
     edit_window = BestEditWindow(rec, cdses[1], grnas[10])
     expected = ["R3*", "R4C"]
 
-    ret = map(str, edit_window.get_mutations())
+    ret = list(map(str, edit_window.get_mutations()))
     assert ret == expected
 
 
