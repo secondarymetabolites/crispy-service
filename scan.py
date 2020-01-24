@@ -52,10 +52,9 @@ def main():
             record = SeqIO.index(path.join(dirname, job.filename), 'genbank')
             target_region = record[list(record.keys())[0]][job.from_coord:job.to_coord]
 
-            annotated = crispy_scan(record, target_region, args.threads, job.pam, job.uniq_size, job.full_size)
-            SeqIO.write([annotated], path.join(dirname, 'results.gbk'), 'genbank')
+            results = crispy_scan(record, target_region, args.threads, job.pam, job.uniq_size, job.full_size)
 
-            json_region = json_annotations(annotated, job.best_size, job.best_offset)
+            json_region = json_annotations(record, results, job.best_size, job.best_offset)
             job.region = json_region
             job.state = 'done'
             logging.info('done with {}'.format(job_key))
