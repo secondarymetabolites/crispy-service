@@ -31,13 +31,13 @@ def annotate_grnas(feats, target_region):
     return target_region
 
 
-def json_annotations(region, best_size=7, best_offset=13):
+def json_annotations(grnas, region, best_size=7, best_offset=13):
     """Return a JSON-compatible version of the target region"""
     json_region = {}
 
     json_region['name'] = get_name_from_cluster(region)
     json_region['orfs'] = generate_orf_entry(region)
-    json_region['grnas'] = generate_grna_entry(region, best_size, best_offset)
+    json_region['grnas'] = extend_grna_entries(grnas, region, best_size, best_offset)
 
     return json_region
 
@@ -60,44 +60,27 @@ def generate_orf_entry(region):
     return json_orfs
 
 
-def generate_grna_entry(region, best_size=7, best_offset=13):
-    """Create a list of JSONified gRNA records"""
-    grnas = [f for f in region.features if f.type == 'gRNA']
-    sorted_grnas = sorted(grnas, key=lambda x: x.location.start)
-    sorted_grnas = sorted(sorted_grnas, key=lambda x: int(x.qualifiers['2bpmm'][0]))
-    sorted_grnas = sorted(sorted_grnas, key=lambda x: int(x.qualifiers['1bpmm'][0]))
-    sorted_grnas = sorted(sorted_grnas, key=lambda x: int(x.qualifiers['0bpmm'][0]))
-
+def extend_grna_entries(grnas, region, best_size=7, best_offset=13):
+    """Extend each record in a list of JSONified gRNA records"""
+    result = {}
     idx = 1
-    json_grnas = {}
-    for bp_grna in sorted_grnas:
-        grna = {}
+    for grna in grnas:
         _id = 'CY{:08d}'.format(idx)
         grna['id'] = _id
         idx += 1
-        grna['start'] = int(bp_grna.location.start)
-        grna['end'] = int(bp_grna.location.end)
-        grna['strand'] = bp_grna.location.strand
-        full_sequence = str(bp_grna.extract(region.seq))
-        grna['sequence'] = full_sequence[:-3]
-        grna['pam'] = full_sequence[-3:]
-        grna['0bpmm'] = int(bp_grna.qualifiers['0bpmm'][0])
-        grna['1bpmm'] = int(bp_grna.qualifiers['1bpmm'][0])
-        grna['2bpmm'] = int(bp_grna.qualifiers['2bpmm'][0])
 
         grna['orf'] = '-'
         grna['can_edit'] = False
         grna['changed_aas'] = {}
+        location = FeatureLocation(grna["start"], grna["end"], grna["strand"])
         for feature in region.features:
-            if feature.type == 'CDS' and BestEditWindow.overlaps(feature, bp_grna, best_size, best_offset):
+            if feature.type == 'CDS' and BestEditWindow.overlaps(feature, location, best_size, best_offset):
                 grna['orf'] = utils.get_ident(feature)
                 grna['can_edit'] = {}
                 for mode in CRISPR_BEST_MODES:
-                    if BestEditWindow.can_edit(region, bp_grna, mode, best_size, best_offset):
-                        edit_window = BestEditWindow(region, feature, bp_grna, mode, best_size, best_offset)
+                    if BestEditWindow.can_edit(region, location, mode, best_size, best_offset):
+                        edit_window = BestEditWindow(region, feature, location, mode, best_size, best_offset)
                         grna['changed_aas'][mode.name()] = list(map(str, edit_window.get_mutations()))
                         grna['can_edit'][mode.name()] = bool(len(grna['changed_aas'][mode.name()]))
-
-        json_grnas[_id] = grna
-
-    return json_grnas
+        result[_id] = grna
+    return result
