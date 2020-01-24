@@ -294,26 +294,6 @@ FEATURES             Location/Qualifiers
                      SNKVLLAAYWCPIALPVNFMITGRCAYLIAAVGWIVLSTIILVALSKKKIR"
                      /gene="nisG"
                      /protein_id="ADJ56362.1"
-     gRNA            26..48
-                     /0bpmm="0"
-                     /1bpmm="0"
-                     /2bpmm="0"
-     gRNA            complement(87..109)
-                     /0bpmm="0"
-                     /1bpmm="0"
-                     /2bpmm="1"
-     gRNA            96..118
-                     /0bpmm="0"
-                     /1bpmm="0"
-                     /2bpmm="0"
-     gRNA            830..852
-                     /0bpmm="0"
-                     /1bpmm="0"
-                     /2bpmm="0"
-     gRNA            complement(1166..1188)
-                     /2bpmm="0"
-                     /1bpmm="0"
-                     /0bpmm="0"
 ORIGIN
         1 tctcttaact ccgtgtctag tttttcgttg actttccatt atgcttggat tttttattgt
        61 ttaattccct ttttttgtat acaagctcgt attcttaaca aataattggc atatcgggtt

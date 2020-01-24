@@ -29,6 +29,33 @@ def test_json_annotations():
     rec = SeqIO.read(get_testfile('results.gbk'), 'genbank')
     bp_orfs = [f for f in rec.features if f.type == 'CDS']
     orfs = utils.jsonify_orfs(bp_orfs)
+    scan_results = [
+        {
+            'start': 25, 'end': 48, 'strand': 1,
+            'sequence': 'CGTTGACTTTCCATTATGCT', 'pam': 'TGG',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 0,
+        },
+        {
+            'start': 95, 'end': 118, 'strand': 1,
+            'sequence': 'TAACAAATAATTGGCATATC', 'pam': 'GGG',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 0,
+        },
+        {
+            'start': 829, 'end': 852, 'strand': 1,
+            'sequence': 'GAGTACAAAAGATTTTAACT', 'pam': 'TGG',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 0,
+        },
+        {
+            'start': 1165, 'end': 1188, 'strand': -1,
+            'sequence': 'GTAAAACTCCGTTTATCGTT', 'pam': 'TGG',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 0,
+        },
+        {
+            'start': 86, 'end': 109, 'strand': -1,
+            'sequence': 'CCAATTATTTGTTAAGAATA', 'pam': 'CGA',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 1,
+        },
+    ]
     expected = {
         'name': 'Cluster 1',
         'orfs': orfs,
@@ -81,7 +108,7 @@ def test_json_annotations():
         },
     }
 
-    ret = ann.json_annotations(rec)
+    ret = ann.json_annotations(scan_results, rec)
     assert ret == expected
 
 def test_get_name_from_cluster():
@@ -99,10 +126,35 @@ def test_generate_orf_entry():
     assert ret == expected
 
 
-def test_generate_grna_entry():
+def test_generate_grna_entries():
     rec = SeqIO.read(get_testfile('results.gbk'), 'genbank')
-    grnas = [f for f in rec.features if f.type == 'gRNA']
-    assert len(grnas) == 5
+    grnas = [
+        {
+            'start': 25, 'end': 48, 'strand': 1,
+            'sequence': 'CGTTGACTTTCCATTATGCT', 'pam': 'TGG',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 0,
+        },
+        {
+            'start': 95, 'end': 118, 'strand': 1,
+            'sequence': 'TAACAAATAATTGGCATATC', 'pam': 'GGG',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 0,
+        },
+        {
+            'start': 829, 'end': 852, 'strand': 1,
+            'sequence': 'GAGTACAAAAGATTTTAACT', 'pam': 'TGG',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 0,
+        },
+        {
+            'start': 1165, 'end': 1188, 'strand': -1,
+            'sequence': 'GTAAAACTCCGTTTATCGTT', 'pam': 'TGG',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 0,
+        },
+        {
+            'start': 86, 'end': 109, 'strand': -1,
+            'sequence': 'CCAATTATTTGTTAAGAATA', 'pam': 'CGA',
+            '0bpmm': 0, '1bpmm': 0, '2bpmm': 1,
+        },
+    ]
     expected = {
         'CY00000001': {
             'id': 'CY00000001',
@@ -150,5 +202,5 @@ def test_generate_grna_entry():
             '0bpmm': 0, '1bpmm': 0, '2bpmm': 1,
         },
     }
-    ret = ann.generate_grna_entry(rec)
+    ret = ann.extend_grna_entries(grnas, rec)
     assert ret == expected

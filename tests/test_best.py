@@ -26,7 +26,7 @@ def rec():
     merry = SeqFeature(FeatureLocation(139, 187, -1), type="CDS", id="merry")
     rec = SeqRecord(seq, id="FAKE", features=[mary, merry])
 
-    crispy_scan([rec], rec)
+    scan_results = crispy_scan([rec], rec)
     rec.features.sort(key=lambda x: x.location.start)
     rec.features.sort(key=lambda x: int(x.qualifiers.get('1bpmm', ['0'])[0]))
 
@@ -39,7 +39,7 @@ def cdses(rec):
 
 @pytest.fixture
 def grnas(rec):
-    return [f for f in rec.features if f.type == 'gRNA']
+    return [FeatureLocation(i["start"], i["end"], i["strand"]) for i in crispy_scan([rec], rec)]
 
 
 def make_codon(seq, start, end, strand, position):
@@ -97,7 +97,7 @@ def test_edit_window(rec, grnas):
     assert ret == expected
 
 
-    assert grnas[3].location.strand == -1
+    assert grnas[3].strand == -1
     expected = FeatureLocation(79, 86, -1)
     ret = BestEditWindow.edit_window(grnas[3])
     assert ret == expected
