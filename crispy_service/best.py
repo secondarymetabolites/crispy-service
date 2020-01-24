@@ -52,20 +52,20 @@ class AtoG(EditMode):
 class BestEditWindow(object):
     """CRISPR-BEST edit window."""
 
-    def __init__(self, record, cds, grna, mode=CtoT, size=7, offset=13):
+    def __init__(self, record, cds, location, mode=CtoT, size=7, offset=13):
         """Set up a CRISPR-BEST edit window.
 
         Parameters:
             record: The SeqRecord object the CDS and gRNA are located on
             cds: The SeqFeature of the CDS potentially edited by the gRNA
-            grna: The SeqFeature of the gRNA responsible for the editing
+            location: the FeatureLocation of the gRNA responsible for the editing
             mode: The edit mode to use (e.g. CtoT)
             size: The size of the edit window
             offset: Distance from PAM that the edit window starts at
         """
         self.record = record
         self.cds = cds
-        self.grna = grna
+        self.location = location
         self.mode = mode
         self.size = size
         self.offset = offset
@@ -77,7 +77,7 @@ class BestEditWindow(object):
             A list of CodonChange objects containing all codons covered by the gRNA edit window
         """
         affected_codons = []
-        window_location = self.edit_window(self.grna, self.size, self.offset)
+        window_location = self.edit_window(self.location, self.size, self.offset)
         for before_codon in self.extract_codons():
             after_codon = before_codon.mutate(window_location, self.mode)
             if not after_codon:
@@ -112,35 +112,35 @@ class BestEditWindow(object):
         return codons
 
     @staticmethod
-    def can_edit(record, grna, mode=CtoT, size=7, offset=13):
+    def can_edit(record, location, mode=CtoT, size=7, offset=13):
         """Check if the edit window can edit, i.e. it contains a C base."""
-        window = BestEditWindow.edit_window(grna, size, offset)
+        window = BestEditWindow.edit_window(location, size, offset)
         seq = window.extract(record.seq)
 
         return mode.can_edit(seq)
 
     @staticmethod
-    def overlaps(cds, grna, size=7, offset=13):
+    def overlaps(cds, location, size=7, offset=13):
         """Check if the gRNA edit window overlaps with the CDS."""
-        window = BestEditWindow.edit_window(grna, size, offset)
+        window = BestEditWindow.edit_window(location, size, offset)
         return (cds.location.start <= window.start <= cds.location.end) \
             or (cds.location.start <= window.end <= cds.location.end)
 
     @staticmethod
-    def edit_window(grna, size=7, offset=13):
+    def edit_window(location, size=7, offset=13):
         """Get the gRNA edit window coordinates, based on gRNA strand.
 
             Parameters:
-                grna: A SeqFeature representing the gRNA to get the edit window for
+                start: the location of the gRNA to get the edit window for
 
             Returns:
                 A FeatureLocation representing the edit window
 
         """
-        if grna.location.strand == -1:
-            return FeatureLocation(grna.location.start + offset, grna.location.start + (offset + size), -1)
+        if location.strand == -1:
+            return FeatureLocation(location.start + offset, location.start + (offset + size), -1)
         else:
-            return FeatureLocation(grna.location.end - (offset + size), grna.location.end - offset, 1)
+            return FeatureLocation(location.end - (offset + size), location.end - offset, 1)
 
 
 class Codon(object):
