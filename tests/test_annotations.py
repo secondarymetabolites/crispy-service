@@ -9,22 +9,6 @@ def get_testfile(filename):
     return path.join(path.dirname(__file__), filename)
 
 
-def test_annotate_grnas():
-    rec = SeqIO.read(get_testfile('minimal.fa'), 'fasta')
-    feats = [[
-        [36, 59, 1, [1, 0, 0]],
-        [1, 24, -1, [1, 0, 0]],
-    ]]
-
-    result = ann.annotate_grnas(feats, rec)
-    grnas = [f for f in result.features if f.type == 'gRNA']
-    assert len(grnas) == 2
-    assert grnas[0].location.start == 36
-    assert grnas[0].strand == 1
-    assert grnas[1].location.start == 1
-    assert grnas[1].strand == -1
-
-
 def test_json_annotations():
     rec = SeqIO.read(get_testfile('results.gbk'), 'genbank')
     bp_orfs = [f for f in rec.features if f.type == 'CDS']

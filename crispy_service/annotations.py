@@ -11,26 +11,6 @@ from Bio.SeqFeature import ExactPosition, FeatureLocation, SeqFeature
 CRISPR_BEST_MODES = [AtoG, CtoT]
 
 
-def annotate_grnas(feats, target_region):
-    for feat_list in feats:
-        for feat in feat_list:
-            zero_bp_mismatches, one_bp_mismatches, two_bp_mismatches = feat[3][:3]
-
-            # find_offtarg reports the self-match as well, so number of true off-targets is one less
-            zero_bp_mismatches -= 1
-
-            target_region.features.append(
-                SeqFeature(FeatureLocation(ExactPosition(feat[0]), ExactPosition(feat[1])),
-                           type="gRNA", strand=feat[2], qualifiers={
-                    "0bpmm": [str(zero_bp_mismatches)],
-                    "1bpmm": [str(one_bp_mismatches)],
-                    "2bpmm": [str(two_bp_mismatches)],
-                })
-            )
-
-    return target_region
-
-
 def json_annotations(grnas, region, best_size=7, best_offset=13):
     """Return a JSON-compatible version of the target region"""
     json_region = {}
