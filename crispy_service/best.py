@@ -94,14 +94,17 @@ class BestEditWindow(object):
 
         seq = self.cds.extract(self.record.seq)
 
+        cds_start = self.cds.location.nofuzzy_start
+        cds_end = self.cds.location.nofuzzy_end
+        strand = self.cds.location.strand
+
         for idx, i in enumerate(range(0, len(seq), 3)):
-            strand = self.cds.location.strand
             if strand == -1:
-                start = self.cds.location.nofuzzy_end - (i + 3)
-                end = self.cds.location.nofuzzy_end - i
+                start = cds_end - (i + 3)
+                end = start + 3
             else:
-                start = self.cds.location.nofuzzy_start + i
-                end = self.cds.location.nofuzzy_start + i + 3
+                start = cds_start + i
+                end = start + 3
             loc = FeatureLocation(start, end, strand)
             yield Codon(seq[i:i + 3], loc, idx)
 
