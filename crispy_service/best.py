@@ -1,7 +1,5 @@
 """Implementation of CRISPR-BEST related features."""
 
-from __future__ import print_function, division
-
 from Bio.Alphabet import generic_dna
 from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation
