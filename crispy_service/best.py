@@ -179,15 +179,15 @@ class Codon(object):
         m_start = max(0, location.start - self.location.start)
         m_end = min(3, location.end - self.location.start)
 
-        new_seq_str = ""
+        new_seq_str = []
         for i, base in enumerate(self.seq):
             if m_start <= i < m_end:
-                new_seq_str += base_changes.get(base, base)
+                new_seq_str.append(base_changes.get(base, base))
             else:
-                new_seq_str += base
+                new_seq_str.append(base)
 
         return Codon(
-            Seq(new_seq_str, generic_dna),
+            Seq("".join(new_seq_str), generic_dna),
             Location(int(self.location.start), int(self.location.end), self.location.strand),
             self.position,)
 
