@@ -4,6 +4,17 @@ from Bio.Alphabet import generic_dna
 from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation
 
+from . import utils
+
+
+class Location:
+    __slots__ = ["start", "end", "strand"]
+
+    def __init__(self, start, end, strand):
+        self.start = start
+        self.end = end
+        self.strand = strand
+
 
 class EditMode(object):
     """CRISPR-BEST edit mode base class."""
@@ -56,7 +67,7 @@ class BestEditWindow(object):
         Parameters:
             record: The SeqRecord object the CDS and gRNA are located on
             cds: The SeqFeature of the CDS potentially edited by the gRNA
-            location: the FeatureLocation of the gRNA responsible for the editing
+            location: the Location of the gRNA responsible for the editing
             mode: The edit mode to use (e.g. CtoT)
             size: The size of the edit window
             offset: Distance from PAM that the edit window starts at
@@ -105,7 +116,7 @@ class BestEditWindow(object):
             else:
                 start = cds_start + i
                 end = start + 3
-            loc = FeatureLocation(start, end, strand)
+            loc = Location(start, end, strand)
             yield Codon(seq[i:i + 3], loc, idx)
 
     @staticmethod
@@ -120,8 +131,7 @@ class BestEditWindow(object):
     def overlaps(cds, location, size=7, offset=13):
         """Check if the gRNA edit window overlaps with the CDS."""
         window = BestEditWindow.edit_window(location, size, offset)
-        return (cds.location.start <= window.start <= cds.location.end) \
-            or (cds.location.start <= window.end <= cds.location.end)
+        return utils.locations_overlap(cds.location, window)
 
     @staticmethod
     def edit_window(location, size=7, offset=13):
@@ -131,7 +141,7 @@ class BestEditWindow(object):
                 start: the location of the gRNA to get the edit window for
 
             Returns:
-                A FeatureLocation representing the edit window
+                A Location representing the edit window
 
         """
         if location.strand == -1:
@@ -149,15 +159,11 @@ class Codon(object):
     def translate(self):
         return self.seq.translate()
 
-    def _overlaps(self, location):
-        # Both edit window and codons are tiny, so this is Ok
-        return len(set(self.location).intersection(set(location))) > 0
-
     def mutate(self, location, mode=CtoT):
         """Mutate this codon in a given location.
 
             Parameters:
-                location: A FeatureLocation object representing the edit window
+                location: A Location object representing the edit window
 
             Returns:
                 A new Codon object representing the mutated codon, or None if location and Codon don't overlap
@@ -167,7 +173,7 @@ class Codon(object):
         else:
             base_changes = mode.opposite_strand
 
-        if not self._overlaps(location):
+        if not utils.locations_overlap(self.location, location):
             return None
 
         m_start = max(0, location.start - self.location.start)
@@ -182,7 +188,7 @@ class Codon(object):
 
         return Codon(
             Seq(new_seq_str, generic_dna),
-            FeatureLocation(int(self.location.start), int(self.location.end), self.location.strand),
+            Location(int(self.location.start), int(self.location.end), self.location.strand),
             self.position,)
 
     def __eq__(self, other):
