@@ -76,14 +76,12 @@ class BestEditWindow(object):
         Returns:
             A list of CodonChange objects containing all codons covered by the gRNA edit window
         """
-        affected_codons = []
         window_location = self.edit_window(self.location, self.size, self.offset)
         for before_codon in self.extract_codons():
             after_codon = before_codon.mutate(window_location, self.mode)
             if not after_codon:
                 continue
-            affected_codons.append(CodonChange(before_codon, after_codon))
-        return affected_codons
+            yield CodonChange(before_codon, after_codon)
 
     def get_mutations(self):
         """Get alll codons of the CDS mutated by the gRNA editing.
@@ -98,7 +96,6 @@ class BestEditWindow(object):
 
         seq = self.cds.extract(self.record.seq)
 
-        codons = []
         for idx, i in enumerate(range(0, len(seq), 3)):
             strand = self.cds.location.strand
             if strand == -1:
@@ -108,8 +105,7 @@ class BestEditWindow(object):
                 start = self.cds.location.nofuzzy_start + i
                 end = self.cds.location.nofuzzy_start + i + 3
             loc = FeatureLocation(start, end, strand)
-            codons.append(Codon(seq[i:i + 3], loc, idx))
-        return codons
+            yield Codon(seq[i:i + 3], loc, idx)
 
     @staticmethod
     def can_edit(record, location, mode=CtoT, size=7, offset=13):
