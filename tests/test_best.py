@@ -68,7 +68,7 @@ def test_extract_codons_fw(rec, cdses, grnas):
         expected.append(codon)
 
     window = BestEditWindow(rec, cds, grna)
-    ret = window.extract_codons()
+    ret = list(window.extract_codons())
     assert ret == expected
 
 
@@ -85,7 +85,7 @@ def test_extract_codons_rv(rec, cdses, grnas):
         expected.append(codon)
 
     window = BestEditWindow(rec, cds, grna)
-    ret = window.extract_codons()
+    ret = list(window.extract_codons())
     assert ret == expected
     atg = ret[0]
     assert str(rec.seq[atg.location.start:atg.location.end]) == "CAT"
