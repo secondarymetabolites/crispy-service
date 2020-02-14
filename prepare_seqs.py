@@ -43,7 +43,7 @@ def main():
     while True:
         job_key = queue.next()
         if job_key is None:
-            time.sleep(5)
+            time.sleep(1)
             continue
         logging.info('processing {}'.format(job_key))
         job_id = int(job_key.split(':')[-1])
