@@ -1,11 +1,16 @@
 """CRISPy-web related annotation logic."""
+
+from typing import Dict, List, Union
+
+from Bio.SeqFeature import ExactPosition, FeatureLocation, SeqFeature
+from Bio.SeqRecord import SeqRecord
+
 from . import utils
 from .best import (
     AtoG,
     BestEditWindow,
     CtoT,
 )
-from Bio.SeqFeature import ExactPosition, FeatureLocation, SeqFeature
 
 
 CRISPR_BEST_MODES = [AtoG, CtoT]
@@ -22,7 +27,7 @@ def json_annotations(grnas, region, best_size=7, best_offset=13):
     return json_region
 
 
-def get_name_from_cluster(region):
+def get_name_from_cluster(region: SeqRecord) -> str:
     """Get the region name from the first cluster's description"""
     name = ''
     bp_clusters = [f for f in region.features if f.type == 'cluster']
@@ -33,7 +38,7 @@ def get_name_from_cluster(region):
     return name
 
 
-def generate_orf_entry(region):
+def generate_orf_entry(region: SeqRecord) -> List[Dict[str, Union[str, int]]]:
     """Create a list of JSONified ORF records"""
     bp_orfs = [f for f in region.features if f.type == 'CDS']
     json_orfs = utils.jsonify_orfs(bp_orfs)
