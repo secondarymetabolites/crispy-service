@@ -4,6 +4,7 @@ from Bio.Alphabet import generic_dna
 from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation
 
+from . import utils
 
 class EditMode(object):
     """CRISPR-BEST edit mode base class."""
@@ -170,10 +171,6 @@ class Codon(object):
     def translate(self):
         return self.seq.translate()
 
-    def _overlaps(self, location):
-        # Both edit window and codons are tiny, so this is Ok
-        return len(set(self.location).intersection(set(location))) > 0
-
     def mutate(self, location, mode=CtoT):
         """Mutate this codon in a given location.
 
@@ -188,7 +185,7 @@ class Codon(object):
         else:
             base_changes = mode.opposite_strand
 
-        if not self._overlaps(location):
+        if not utils.locations_overlap(self.location, location):
             return None
 
         m_start = max(0, location.start - self.location.start)

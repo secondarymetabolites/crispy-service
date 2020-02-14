@@ -3,6 +3,7 @@ from Bio.Seq import Seq
 from Bio.SeqFeature import (
     SeqFeature,
     FeatureLocation,
+    CompoundLocation
 )
 from Bio.SeqRecord import SeqRecord
 import logging
@@ -149,3 +150,12 @@ def json_to_gbk(as_json):
     record = SeqRecord(seq, id=as_rec['id'], name=as_rec['name'], description=as_rec['description'],
                        features=features, annotations=as_rec['annotations'], dbxrefs=as_rec['dbxrefs'])
     return record
+
+
+def locations_overlap(first, second) -> bool:
+    """Check if two locations overlap."""
+    if isinstance(first, CompoundLocation):
+        return any(locations_overlap(part, second) for part in first.parts)
+    if isinstance(second, CompoundLocation):
+        return any(locations_overlap(first, part) for part in second.parts)
+    return first.end > second.start and second.end > first.start
