@@ -47,6 +47,28 @@ class AtoG(EditMode):
         return "AtoG"
 
 
+class FastFeatureLocation(object):
+    __slots__ = (
+        'start',
+        'end',
+        'strand'
+    )
+
+    def __init__(self, start: int, end: int, strand: int) -> None:
+        self.start = start
+        self.end = end
+        self.strand = strand
+
+    def __iter__(self):
+        yield from range(self.start, self.end)
+
+    def __eq__(self, other):
+        if not isinstance(other, (FeatureLocation, FastFeatureLocation)):
+            return False
+
+        return self.start == other.start and self.end == other.end and self.strand == other.strand
+
+
 class BestEditWindow(object):
     """CRISPR-BEST edit window."""
 
@@ -102,7 +124,7 @@ class BestEditWindow(object):
             else:
                 start = self.cds.location.nofuzzy_start + i
                 end = self.cds.location.nofuzzy_start + i + 3
-            loc = FeatureLocation(start, end, strand)
+            loc = FastFeatureLocation(start, end, strand)
             yield Codon(seq[i:i + 3], loc, idx)
 
     @staticmethod
@@ -179,7 +201,7 @@ class Codon(object):
 
         return Codon(
             Seq(new_seq_str, generic_dna),
-            FeatureLocation(int(self.location.start), int(self.location.end), self.location.strand),
+            FastFeatureLocation(int(self.location.start), int(self.location.end), self.location.strand),
             self.position,)
 
     def __eq__(self, other):
