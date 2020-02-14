@@ -49,13 +49,14 @@ def main():
         dirname = path.join(UPLOAD_PATH, str(job_id))
 
         try:
-            record = SeqIO.index(path.join(dirname, job.filename), 'genbank')
-            target_region = record[list(record.keys())[0]][job.from_coord:job.to_coord]
+            # TODO: Once the rest of the code handles record lists, use the full list.
+            record = list(SeqIO.parse(path.join(dirname, job.filename), 'genbank'))[0]
+            target_region = record[job.from_coord:job.to_coord]
 
-            results = crispy_scan(record, target_region, args.threads, job.pam, job.uniq_size, job.full_size)
+            results = crispy_scan([record], target_region, job.pam, job.uniq_size, job.full_size, threads=args.threads)
 
-            json_region = json_annotations(record, results, job.best_size, job.best_offset)
-            job.region = json_region
+            json_regions = json_annotations(results, target_region, job.best_size, job.best_offset)
+            job.region = json_regions
             job.state = 'done'
             logging.info('done with {}'.format(job_key))
         except ValueError as e:
