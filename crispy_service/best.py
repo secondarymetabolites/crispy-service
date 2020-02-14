@@ -87,7 +87,10 @@ class BestEditWindow(object):
         """
         window_location = self.edit_window(self.location, self.size, self.offset)
         for before_codon in self.extract_codons():
+            if not utils.locations_overlap(window_location, before_codon.location):
+                continue
             after_codon = before_codon.mutate(window_location, self.mode)
+            assert after_codon
             if not after_codon:
                 continue
             yield CodonChange(before_codon, after_codon)
@@ -112,10 +115,9 @@ class BestEditWindow(object):
         for idx, i in enumerate(range(0, len(seq), 3)):
             if strand == -1:
                 start = cds_end - (i + 3)
-                end = start + 3
             else:
                 start = cds_start + i
-                end = start + 3
+            end = start + 3
             loc = Location(start, end, strand)
             yield Codon(seq[i:i + 3], loc, idx)
 
@@ -173,22 +175,20 @@ class Codon(object):
         else:
             base_changes = mode.opposite_strand
 
-        if not utils.locations_overlap(self.location, location):
-            return None
+#        if not utils.locations_overlap(self.location, location):
+#            return None
 
         m_start = max(0, location.start - self.location.start)
         m_end = min(3, location.end - self.location.start)
 
-        new_seq_str = []
-        for i, base in enumerate(self.seq):
-            if m_start <= i < m_end:
-                new_seq_str.append(base_changes.get(base, base))
-            else:
-                new_seq_str.append(base)
+        changes = []
+        for i in range(m_start, m_end):
+            base = self.seq[i]
+            changes.append(base_changes.get(base, base))
 
         return Codon(
-            Seq("".join(new_seq_str), generic_dna),
-            Location(int(self.location.start), int(self.location.end), self.location.strand),
+            Seq(str(self.seq[:m_start]) + "".join(changes) + str(self.seq[m_end:]), generic_dna),
+            self.location,
             self.position,)
 
     def __eq__(self, other):

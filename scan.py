@@ -49,8 +49,8 @@ def main():
         dirname = path.join(UPLOAD_PATH, str(job_id))
 
         try:
-            record = SeqIO.index(path.join(dirname, job.filename), 'genbank')
-            target_region = record[list(record.keys())[0]][job.from_coord:job.to_coord]
+            record = SeqIO.parse(path.join(dirname, job.filename), 'genbank')
+            target_region = record[0][job.from_coord:job.to_coord]
 
             results = crispy_scan(record, target_region, args.threads, job.pam, job.uniq_size, job.full_size)
 

@@ -40,8 +40,8 @@ def crispy_scan(haystack: List[SeqRecord], needle: SeqRecord, pam: str = "GG",
             'start': location.start,
             'end': location.end,
             'strand': location.strand,
-            'sequence': seq_section[:-3],
-            'pam': seq_section[-3:],
+            'sequence': str(seq_section[:-3]),
+            'pam': str(seq_section[-3:]),
             'all_hits': result,  # new to JSON, for handy sorting
             '0bpmm': result[0] - 1,  # remove self-hit
         }
