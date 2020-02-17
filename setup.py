@@ -48,6 +48,12 @@ setup(name='crispy-service',
     extras_require={
         'testing': tests_require,
     },
-
+    entry_points={
+        'console_scripts': [
+            'crispy-prepare=crispy_service.prepare:main',
+            'crispy-scan=crispy_service.scan:main',
+            'crispy-standalone=crispy_service.standalone:main',
+        ],
+    },
 )
 
