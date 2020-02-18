@@ -65,7 +65,7 @@ def crispy_scan(haystack: List[SeqRecord], needle: SeqRecord, pam: str = "GG",
         else:
             searcher = Searcher(str(needle.seq))
         results = searcher.find_repeat_counts(target=pam, before_window=before_window,
-                                              other_text=comparison_text)
+                                              other_text=comparison_text, threads=threads)
 
         for pam_start, result in sorted(results.items(), key=lambda x: x[1]):
             # set the window location, accounting for strand
