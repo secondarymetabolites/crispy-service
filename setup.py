@@ -13,7 +13,7 @@ version = read(version_py).strip().split('=')[-1].replace("'", "").strip()
 install_requires = [
     "biopython",
     "crispy-models",
-    "nearmiss",
+    "nearmiss >= 0.1.3",
     "redis",
     "requests",
 ]
