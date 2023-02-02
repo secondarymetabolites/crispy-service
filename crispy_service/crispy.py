@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Union
 
 from Bio.SeqFeature import FeatureLocation
 from Bio.SeqRecord import SeqRecord
@@ -28,7 +28,7 @@ def build_comparison_text(records: List[SeqRecord], window_size: int) -> str:
 
 def crispy_scan(haystack: List[SeqRecord], needle: SeqRecord, pam: str = "GG",
                 unique_size: int = 13, full_size: int = 23, threads: int = -1,
-                ) -> List[Tuple[int, List[int]]]:
+                ) -> List[Dict[str, Union[str, int]]]:
     if unique_size < 1:
         raise ValueError("unique size cannot be below 1")
     if full_size < unique_size:
