@@ -49,7 +49,7 @@ def main():  # noqa: C901  # no, flake8, it's not too complex
         job_id = int(job_key.split(':')[-1])
         job = Session(db, session_id=job_id)
         dirname = path.join(UPLOAD_PATH, str(job_id))
-        if job.asid != 'None':
+        if job.asid:
             logging.info('grabbing file for id {}'.format(job.asid))
             try:
                 json_rec, filename = fetch(job.asid, dirname)
