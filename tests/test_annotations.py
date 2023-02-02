@@ -4,6 +4,7 @@ from os import path
 from crispy_service import utils
 from crispy_service import annotations as ann
 
+
 # TODO: Move to a shared location
 def get_testfile(filename):
     return path.join(path.dirname(__file__), filename)
@@ -94,6 +95,7 @@ def test_json_annotations():
 
     ret = ann.json_annotations(scan_results, rec)
     assert ret == expected
+
 
 def test_get_name_from_cluster():
     rec = SeqIO.read(get_testfile('results.gbk'), 'genbank')

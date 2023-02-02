@@ -74,7 +74,8 @@ def test_jsonify_orfs_error_paths():
     del cds.qualifiers['protein_id']
 
     expected = [
-        {'start': 827, 'end': 1001, 'strand': 1, 'id': 'fake_tag', 'gene': 'nisA', 'protein_id': 'ADJ56352.1', 'locus_tag': 'fake_tag'},
+        {'start': 827, 'end': 1001, 'strand': 1, 'id': 'fake_tag', 'gene': 'nisA', 'protein_id': 'ADJ56352.1',
+         'locus_tag': 'fake_tag'},
         {'start': 1108, 'end': 4090, 'strand': 1, 'id': 'fake_protein', 'protein_id': 'fake_protein'},
         {'start': 5895, 'end': 7140, 'strand': 1, 'id': 'nisC', 'gene': 'nisC', 'protein_id': 'ADJ56355.1'},
         {'start': 7136, 'end': 7874, 'strand': 1, 'id': 'nisI', 'gene': 'nisI', 'protein_id': 'ADJ56356.1'},

@@ -5,6 +5,7 @@ from Bio import SeqIO
 from crispy_service import fetch, utils
 import requests
 
+
 @pytest.fixture
 def req(monkeypatch):
     """A fake replacement for the requests library"""
@@ -12,15 +13,19 @@ def req(monkeypatch):
         def __init__(self, status_code, text):
             self.text = text
             self.status_code = status_code
+
         def raise_for_status(self):
             if self.status_code >= 400:
                 raise requests.HTTPError()
+
     class FakeRequests(object):
         def __init__(self):
             self.retvals = []
             self.urls = []
+
         def set_return(self, value):
             self.retvals.append(value)
+
         def get(self, url):
             self.urls.append(url)
             status_code, text = self.retvals.pop(0)
@@ -48,7 +53,13 @@ def test_grab_index_error(req):
 
 
 def test_find_dl_link():
-    text = 'test\n<li><a href="NC_003888.3.zip">Download all results</a></li><li><a href="NC_003888.3.geneclusters.xls">Download XLS overview file</a></li><li><a href="NC_003888.3.final.embl">Download EMBL summary file</a></li><li><a href="NC_003888.3.final.gbk">Download GenBank summary file</a></li><li><a href="biosynML.xml" target="_blank">Download BiosynML file</a></li><li><a href="metabolicModel/antiSMASH_model_with_template_sco.xml">Download metabolic model SBXML file</a></li></ul>\ntest'
+    text = ('test\n<li><a href="NC_003888.3.zip">Download all results</a></li>'
+            '<li><a href="NC_003888.3.geneclusters.xls">Download XLS overview file</a></li>'
+            '<li><a href="NC_003888.3.final.embl">Download EMBL summary file</a></li>'
+            '<li><a href="NC_003888.3.final.gbk">Download GenBank summary file</a></li>'
+            '<li><a href="biosynML.xml" target="_blank">Download BiosynML file</a></li>'
+            '<li><a href="metabolicModel/antiSMASH_model_with_template_sco.xml">Download metabolic model SBXML file</a>'
+            '</li></ul>\ntest')
     link = fetch.find_dl_link(text)
     assert link == 'NC_003888.3.final.gbk'
 
@@ -126,7 +137,7 @@ def test_fetch(tmpdir, req):
     req.set_return((220, text))
 
     json_rec, filename = fetch.fetch('test', str(tmpdir))
-    #FIXME: change this once creating the json record is implemented
+    # FIXME: change this once creating the json record is implemented
     assert json_rec == fetch.genome_json(rec)
     assert filename == 'input.gbk'
     assert req.urls[0] == 'https://antismash.secondarymetabolites.org/upload/test/index.html'
@@ -141,7 +152,7 @@ def test_fetch_create_dir(tmpdir, req):
     req.set_return((220, text))
 
     json_rec, filename = fetch.fetch('test', path.join(str(tmpdir), 'nonexistent'))
-    #FIXME: change this once creating the json record is implemented
+    # FIXME: change this once creating the json record is implemented
     assert json_rec == fetch.genome_json(rec)
     assert filename == 'input.gbk'
     assert req.urls[0] == 'https://antismash.secondarymetabolites.org/upload/test/index.html'

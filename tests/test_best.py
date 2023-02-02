@@ -26,11 +26,12 @@ def rec():
     merry = SeqFeature(FeatureLocation(139, 187, -1), type="CDS", id="merry")
     rec = SeqRecord(seq, id="FAKE", features=[mary, merry])
 
-    scan_results = crispy_scan([rec], rec)
+    crispy_scan([rec], rec)
     rec.features.sort(key=lambda x: x.location.start)
     rec.features.sort(key=lambda x: int(x.qualifiers.get('1bpmm', ['0'])[0]))
 
     return rec
+
 
 @pytest.fixture
 def cdses(rec):
@@ -60,11 +61,12 @@ def test_extract_codons_fw(rec, cdses, grnas):
     grna = grnas[0]  # any will do, we're not really using these
 
     expected = []
-    for idx, triplet in enumerate(["ATG", "GCG", "CGA", "TAC", "ATG", "GCC", "GGC", "ATC", "TGC", "CAC", "GCC", "ACC", "TGA"]):
+    for idx, triplet in enumerate(["ATG", "GCG", "CGA", "TAC", "ATG", "GCC", "GGC", "ATC", "TGC",
+                                   "CAC", "GCC", "ACC", "TGA"]):
         codon = Codon(Seq(triplet, generic_dna),
                       FeatureLocation(cds.location.start + (idx * 3),
                                       cds.location.start + (idx * 3) + 3, 1),
-                                      idx)
+                      idx)
         expected.append(codon)
 
     window = BestEditWindow(rec, cds, grna)
@@ -77,11 +79,12 @@ def test_extract_codons_rv(rec, cdses, grnas):
     grna = grnas[0]  # any will do, we're not really using these
 
     expected = []
-    for idx, triplet in enumerate(["ATG", "GAG", "CGA", "CGC", "TAC" ,"GCG", "AAC", "GAC", "GGA", "GCC", "AAC", "GAC", "GCC", "CTG", "TTC", "TGA"]):
+    for idx, triplet in enumerate(["ATG", "GAG", "CGA", "CGC", "TAC", "GCG", "AAC", "GAC", "GGA", "GCC",
+                                   "AAC", "GAC", "GCC", "CTG", "TTC", "TGA"]):
         codon = Codon(Seq(triplet, generic_dna),
                       FeatureLocation(cds.location.end - (idx * 3) - 3,
                                       cds.location.end - (idx * 3), -1),
-                                      idx)
+                      idx)
         expected.append(codon)
 
     window = BestEditWindow(rec, cds, grna)
@@ -95,7 +98,6 @@ def test_edit_window(rec, grnas):
     expected = FeatureLocation(34, 41, 1)
     ret = BestEditWindow.edit_window(grnas[0])
     assert ret == expected
-
 
     assert grnas[3].strand == -1
     expected = FeatureLocation(79, 86, -1)

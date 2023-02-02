@@ -81,7 +81,6 @@ def parse_serialised_location(location):
     else:
         loc_parts.append(location)
 
-    parsed_locs = []
     part = loc_parts[0]
     start, end = parse_coords(part)
     strand = parse_strand(part)

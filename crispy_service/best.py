@@ -6,10 +6,11 @@ from Bio.SeqFeature import FeatureLocation
 
 from . import utils
 
+
 class EditMode(object):
     """CRISPR-BEST edit mode base class."""
-    same_strand = {}
-    opposite_strand = {}
+    same_strand: dict[str, str] = {}
+    opposite_strand: dict[str, str] = {}
 
     @staticmethod
     def can_edit(seq):
