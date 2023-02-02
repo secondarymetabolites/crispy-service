@@ -19,7 +19,6 @@ install_requires = [
 ]
 
 tests_require = [
-    "mockredispy-kblin",
     "pytest",
     "pytest-cov",
 ]

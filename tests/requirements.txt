@@ -1,4 +1,0 @@
-coverage==4.0
-mockredispy==2.9.0.11
-pytest==2.8.1
-pytest-cov==2.2.0
