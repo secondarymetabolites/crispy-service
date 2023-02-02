@@ -52,6 +52,7 @@ setup(name='crispy-service',
             'crispy-prepare=crispy_service.prepare:main',
             'crispy-scan=crispy_service.scan:main',
             'crispy-standalone=crispy_service.standalone:main',
+            'crispy-cleanup=crispy_service.cleanup:main',
         ],
     },
 )
