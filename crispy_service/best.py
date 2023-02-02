@@ -25,7 +25,7 @@ class CtoT(EditMode):
         return "C" in seq
 
     def __str__(self):
-        return self.name
+        return self.name()
 
     @staticmethod
     def name():
@@ -41,7 +41,7 @@ class AtoG(EditMode):
         return "A" in seq
 
     def __str__(self):
-        return self.name
+        return self.name()
 
     @staticmethod
     def name():
