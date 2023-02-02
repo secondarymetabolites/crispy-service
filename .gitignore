@@ -1,2 +1,3 @@
 crispy_service.egg-info/*
 **/__pycache__/*
+.coverage
