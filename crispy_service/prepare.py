@@ -19,7 +19,7 @@ from crispy_service.utils import json_to_gbk
 from crispy_service import version
 
 
-def main():
+def main():  # noqa: C901  # no, flake8, it's not too complex
     parser = argparse.ArgumentParser(description='CRISPy sequence preparation service')
     parser.add_argument('-d', '--debug', dest='debug',
                         action='store_true', default=False,
@@ -95,6 +95,7 @@ def main():
         job.state = 'loaded'
 
         logging.info('done with {}'.format(job_key))
+
 
 if __name__ == '__main__':
     main()

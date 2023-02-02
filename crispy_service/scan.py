@@ -13,7 +13,7 @@ from crispy_service.annotations import json_annotations
 from crispy_service import version
 
 
-def main():
+def main():  # noqa: C901  # no, flake8, it's not too complex
     parser = argparse.ArgumentParser(description='CRISPy scan service')
     parser.add_argument('-d', '--debug', dest='debug',
                         action='store_true', default=False,

@@ -9,6 +9,7 @@ from . import utils
 
 BASE_URL = 'https://antismash.secondarymetabolites.org/upload/{id}'
 
+
 def grab_index(asID):
     """Get the index.html file for an antiSMASH ID"""
     index_url = '{}/index.html'.format(BASE_URL.format(id=asID))

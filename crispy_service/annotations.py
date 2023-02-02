@@ -2,7 +2,7 @@
 
 from typing import Dict, List, Union
 
-from Bio.SeqFeature import ExactPosition, FeatureLocation, SeqFeature
+from Bio.SeqFeature import FeatureLocation
 from Bio.SeqRecord import SeqRecord
 
 from . import utils

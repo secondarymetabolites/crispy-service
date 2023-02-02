@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Scan a sequence for CRISPR PAMs from the command line"""
 
-import time
 import argparse
 import logging
 import json
+
 from Bio import SeqIO
+
 from crispy_service.crispy import crispy_scan
 from crispy_service.annotations import json_annotations
 from crispy_service import version

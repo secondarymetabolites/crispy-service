@@ -1,6 +1,5 @@
 from typing import Dict, List, Tuple, Union
 
-from Bio import SeqIO
 from Bio.SeqFeature import FeatureLocation
 from Bio.SeqRecord import SeqRecord
 from nearmiss import Searcher
