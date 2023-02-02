@@ -53,7 +53,7 @@ def delete_job_files(job_id: int, upload_dir: Path):
 
     jobdir = upload_dir / str(job_id)
     if not jobdir.exists():
-        logging.debug("No directory %s, skipping")
+        logging.debug("No directory %s, skipping", jobdir)
         return
 
     shutil.rmtree(jobdir)
