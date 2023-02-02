@@ -67,6 +67,8 @@ def main():
             job.state = 'error'
             job.error = str(err)
             raise
+        finally:
+            db.incr("crispy:jobcount", 1)
 
 
 if __name__ == '__main__':
