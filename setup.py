@@ -11,7 +11,7 @@ version_py = os.path.join('crispy_service', 'version.py')
 version = read(version_py).strip().split('=')[-1].replace("'", "").strip()
 
 install_requires = [
-    "biopython",
+    "biopython >= 1.80",
     "crispy-models",
     "nearmiss >= 0.1.3",
     "redis",
@@ -56,4 +56,3 @@ setup(name='crispy-service',
         ],
     },
 )
-

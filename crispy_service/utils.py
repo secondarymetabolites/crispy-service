@@ -1,4 +1,3 @@
-from Bio.Alphabet import generic_dna
 from Bio.Seq import Seq
 from Bio.SeqFeature import (
     SeqFeature,
@@ -138,7 +137,7 @@ def get_ident(bp_orf):
 def json_to_gbk(as_json):
     """Generate a GenBank record from an antiSMASH JSON file."""
     as_rec = as_json['records'][0]
-    seq = Seq(as_rec['seq']['data'], generic_dna)
+    seq = Seq(as_rec['seq']['data'])
     features = []
     for json_feature in as_rec['features']:
         start, end, strand = parse_serialised_location(json_feature['location'])

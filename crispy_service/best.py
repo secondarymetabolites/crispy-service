@@ -1,6 +1,5 @@
 """Implementation of CRISPR-BEST related features."""
 
-from Bio.Alphabet import generic_dna
 from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation
 
@@ -200,7 +199,7 @@ class Codon(object):
                 new_seq_str += base
 
         return Codon(
-            Seq(new_seq_str, generic_dna),
+            Seq(new_seq_str),
             FastFeatureLocation(int(self.location.start), int(self.location.end), self.location.strand),
             self.position,)
 

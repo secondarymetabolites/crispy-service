@@ -1,6 +1,5 @@
 from __future__ import print_function, division
 
-from Bio.Alphabet import generic_dna
 from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation, SeqFeature
 from Bio.SeqRecord import SeqRecord
@@ -17,11 +16,11 @@ from crispy_service.crispy import crispy_scan
 
 @pytest.fixture
 def rec():
-    seq = Seq("ATTTA"*10 + \
-                "ATGGCGCGATACATGGCCGGCATCTGCCACGCCACCTGA" + \
-                "ATTTA"*10 + \
-                "TCAGAACAGGGCGTCGTTGGCTCCGTCGTTCGCGTAGCGTCGCTCCAT" + \
-                "ATTTA"*10, generic_dna)
+    seq = Seq("ATTTA"*10 +
+              "ATGGCGCGATACATGGCCGGCATCTGCCACGCCACCTGA" +
+              "ATTTA"*10 +
+              "TCAGAACAGGGCGTCGTTGGCTCCGTCGTTCGCGTAGCGTCGCTCCAT" +
+              "ATTTA"*10)
     mary = SeqFeature(FeatureLocation(50, 89, 1), type="CDS", id="mary")
     merry = SeqFeature(FeatureLocation(139, 187, -1), type="CDS", id="merry")
     rec = SeqRecord(seq, id="FAKE", features=[mary, merry])
@@ -44,7 +43,7 @@ def grnas(rec):
 
 
 def make_codon(seq, start, end, strand, position):
-    return Codon(Seq(seq, generic_dna), FeatureLocation(start, end, strand, position), position)
+    return Codon(Seq(seq), FeatureLocation(start, end, strand, position), position)
 
 
 def make_codon_change(before, after, position, strand=1):
@@ -63,7 +62,7 @@ def test_extract_codons_fw(rec, cdses, grnas):
     expected = []
     for idx, triplet in enumerate(["ATG", "GCG", "CGA", "TAC", "ATG", "GCC", "GGC", "ATC", "TGC",
                                    "CAC", "GCC", "ACC", "TGA"]):
-        codon = Codon(Seq(triplet, generic_dna),
+        codon = Codon(Seq(triplet),
                       FeatureLocation(cds.location.start + (idx * 3),
                                       cds.location.start + (idx * 3) + 3, 1),
                       idx)
@@ -81,7 +80,7 @@ def test_extract_codons_rv(rec, cdses, grnas):
     expected = []
     for idx, triplet in enumerate(["ATG", "GAG", "CGA", "CGC", "TAC", "GCG", "AAC", "GAC", "GGA", "GCC",
                                    "AAC", "GAC", "GCC", "CTG", "TTC", "TGA"]):
-        codon = Codon(Seq(triplet, generic_dna),
+        codon = Codon(Seq(triplet),
                       FeatureLocation(cds.location.end - (idx * 3) - 3,
                                       cds.location.end - (idx * 3), -1),
                       idx)
@@ -198,14 +197,14 @@ def test_get_mutations_rv_rv(rec, cdses, grnas):
 
 
 def test_codon():
-    atg = Codon(Seq("ATG", generic_dna), FeatureLocation(0, 3, 1), 1)
+    atg = Codon(Seq("ATG"), FeatureLocation(0, 3, 1), 1)
     assert str(atg) == "ATG{[0:3](+)}(M1)"
     assert repr(atg) == str(atg)
 
 
 def test_codon_mutate():
-    aaa = Codon(Seq("AAA", generic_dna), FeatureLocation(10, 13, 1), 1)
-    ccc = Codon(Seq("CCC", generic_dna), FeatureLocation(10, 13, 1), 1)
+    aaa = Codon(Seq("AAA"), FeatureLocation(10, 13, 1), 1)
+    ccc = Codon(Seq("CCC"), FeatureLocation(10, 13, 1), 1)
 
     nothing = ccc.mutate(FeatureLocation(6, 9, 1))
     assert nothing is None
