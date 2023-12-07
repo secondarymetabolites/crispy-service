@@ -55,7 +55,7 @@ def extend_grna_entries(grnas, region, best_size=7, best_offset=13):
         idx += 1
 
         grna['orf'] = '-'
-        grna['can_edit'] = False
+        grna['can_edit'] = {}
         grna['changed_aas'] = {}
         location = FeatureLocation(grna["start"], grna["end"], grna["strand"])
         for feature in region.features:
