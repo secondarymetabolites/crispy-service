@@ -22,7 +22,7 @@ source env/bin/activate
 
 (or use virtualenvmanager or conda or the like).
 
-**Note:** The minimum supported Python version is 3.9
+**Note:** Supported Python versions are 3.9, 3.10, and 3.11
 
 Then, install crispy-standalone and all its dependencies:
 
